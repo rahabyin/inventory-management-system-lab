@@ -21,3 +21,25 @@ def get_item(item_id):
         return jsonify({"error": "Item not found"}), 404
 
     return jsonify(item), 200
+
+@inventory_bp.route("/inventory", methods=["POST"])
+def add_item():
+    data = request.get_json()
+
+    required_fields = ["name", "brand", "price", "stock"]
+
+    for field in required_fields:
+        if field not in data:
+            return jsonify({"error": f"{field} is required"}), 400
+
+    new_item = {
+        "id": inventory[-1]["id"] + 1 if inventory else 1,
+        "name": data["name"],
+        "brand": data["brand"],
+        "price": data["price"],
+        "stock": data["stock"]
+    }
+
+    inventory.append(new_item)
+
+    return jsonify(new_item), 201
