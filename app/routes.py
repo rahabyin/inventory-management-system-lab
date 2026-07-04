@@ -1,5 +1,10 @@
 from flask import Blueprint, jsonify, request
 from data.inventory_data import inventory
+from app.api import (
+    get_product_by_barcode,
+    search_products
+)
+from app.inventory import add_product_by_barcode
 
 inventory_bp = Blueprint("inventory", __name__)
 
@@ -70,3 +75,44 @@ def delete_item(item_id):
 
     return jsonify({"message": "Item deleted successfully"}), 200
 
+@inventory_bp.route("/barcode/<barcode>")
+def barcode_lookup(barcode):
+
+    product = get_product_by_barcode(barcode)
+
+    if not product:
+        return {
+            "error": "Product not found"
+        }, 404
+
+    return {
+        "barcode": barcode,
+        "name": product.get("product_name"),
+        "brand": product.get("brands"),
+        "quantity": product.get("quantity")
+    }
+
+@inventory_bp.route("/search/<name>")
+def search(name):
+
+    products = search_products(name)
+
+    results = []
+
+    for product in products[:10]:
+        results.append({
+            "name": product.get("product_name"),
+            "barcode": product.get("code"),
+            "brand": product.get("brands")
+        })
+
+    return results
+
+@inventory_bp.route("/inventory/add/<barcode>", methods=["POST"])
+def add_inventory_item(barcode):
+    item = add_product_by_barcode(barcode)
+
+    if "error" in item:
+        return item, 404
+
+    return item, 201
