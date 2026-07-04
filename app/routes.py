@@ -1,9 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, jsonify, request
+from data.inventory_data import inventory
 
 inventory_bp = Blueprint("inventory", __name__)
-
-@inventory_bp.route("/")
-def home():
-    return {
-        "message": "Welcome to the Inventory Management API"
-    }
