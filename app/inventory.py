@@ -10,10 +10,12 @@ def add_product_by_barcode(barcode):
         return {"error": "Product not found"}
 
     item = {
-        "barcode": barcode,
+        "id": inventory[-1]["id"] + 1 if inventory else 1,
         "name": product.get("product_name", "Unknown"),
         "brand": product.get("brands", "Unknown"),
-        "quantity": product.get("quantity", "Unknown")
+        "price": 0.0,
+        "stock": 1,
+        "barcode": barcode
     }
 
     inventory.append(item)
