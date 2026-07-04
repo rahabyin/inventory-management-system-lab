@@ -70,7 +70,7 @@ inventory-management-system/
 Clone the repository:
 
 ```bash
-git clone <repository-url>
+git clone git@github.com:rahabyin/inventory-management-system-lab.git
 ```
 
 Navigate into the project:
